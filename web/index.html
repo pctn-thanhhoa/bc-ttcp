@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hỗ trợ nhập biểu 01/PCTN – Thanh Hóa</title>
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<header class="dau">
+  <h1>Hỗ trợ nhập biểu 01/PCTN trên Hệ thống báo cáo ngành Thanh tra</h1>
+  <span class="dv" id="tenDV"></span>
+  <button class="lk" id="nutThoat" hidden>Thoát</button>
+  <a href="quan-tri.html" id="lkQT">Quản trị</a>
+</header>
+<main>
+  <!-- Đăng nhập -->
+  <section id="pDangNhap" class="the hep">
+    <h2>Chọn đơn vị</h2>
+    <p class="mo">Trang giúp đơn vị xem số liệu biểu 01/PCTN các tháng đã báo cáo, nhập số liệu tháng hiện tại; số lũy kế, số quý được tính tự động để nhập vào Hệ thống báo cáo tổng hợp ngành Thanh tra (bcth.thanhtra.gov.vn).</p>
+    <label for="oTim">Tìm đơn vị</label>
+    <input type="text" id="oTim" placeholder="Gõ tên xã, phường, sở, ngành (không cần dấu)" autocomplete="off">
+    <select id="oDV" size="9" aria-label="Danh sách đơn vị"></select>
+    <label for="oMa">Mã truy cập</label>
+    <input type="password" id="oMa" autocomplete="off" inputmode="numeric">
+    <div class="loi" id="loiDN"></div>
+    <button class="nut" id="nutVao">Vào trang nhập liệu</button>
+    <p class="mo" style="margin-bottom:0">Đầu mối hỗ trợ: Phòng Nghiệp vụ 4, Thanh tra tỉnh Thanh Hóa.</p>
+  </section>
+
+  <!-- Nhập liệu -->
+  <section id="pNhap" hidden>
+    <div class="the">
+      <h2 id="tdKy"></h2>
+      <div id="moTaKy"></div>
+      <div id="hopCanhBao"></div>
+    </div>
+    <div class="thanh">
+      <button class="nut" id="nutLuu">Lưu</button>
+      <label>Người nhập <input type="text" id="oNguoi" maxlength="80" placeholder="Họ tên (không bắt buộc)"></label>
+      <label><input type="checkbox" id="ckLS"> Hiện số các tháng trước</label>
+      <span id="nutXuat"></span>
+      <span class="trang-thai" id="trangThai"></span>
+    </div>
+    <div class="khung-bang an-ls" id="khungBang"><table class="bieu" id="bang"></table></div>
+    <div class="the" style="margin-top:12px">
+      <h2>Kết quả kiểm tra logic</h2>
+      <div id="ketQuaKT" class="mo">Chưa có số liệu để kiểm tra.</div>
+    </div>
+    <div class="the">
+      <h2>Cách dùng</h2>
+      <ol style="margin:0;padding-left:20px">
+        <li>Nhập số phát sinh <b>trong tháng</b> vào cột màu vàng; bấm <b>Lưu</b> (có thể nhập làm nhiều lần, lần sau đăng nhập sẽ thấy số đã lưu).</li>
+        <li>Cột màu xanh là số lũy kế (và số quý, 6 tháng, 9 tháng, năm ở tháng cuối quý) do trang tự tính từ số đã gửi trên bcth cộng với số tháng này.</li>
+        <li>Trên bcth, lập từng báo cáo biểu 01/PCTN của kỳ và nhập theo đúng cột tương ứng; hoặc bấm <b>Tải tệp</b> rồi dùng nút <b>Import số liệu</b> của bcth để nạp tệp.</li>
+        <li>Số các tháng trước lấy từ báo cáo đơn vị đã gửi trên bcth. Nếu số đó chưa đúng, đề nghị điều chỉnh trên bcth; trang sẽ cập nhật ở lần đồng bộ sau.</li>
+      </ol>
+    </div>
+  </section>
+</main>
+<script src="assets/config.js"></script>
+<script src="../gas/01_ChiTieu.js"></script>
+<script src="../gas/02_TinhToan.js"></script>
+<script src="../gas/03_QuyTac.js"></script>
+<script src="assets/common.js"></script>
+<script src="assets/xlsx.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

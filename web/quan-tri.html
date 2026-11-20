@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Quản trị – Hỗ trợ nhập biểu 01/PCTN</title>
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+<header class="dau">
+  <h1>Quản trị – Hỗ trợ nhập biểu 01/PCTN</h1>
+  <a href="index.html">Trang đơn vị</a>
+</header>
+<main>
+  <section id="pDN" class="the hep">
+    <h2>Đăng nhập quản trị</h2>
+    <label for="oMK">Mật khẩu quản trị</label>
+    <input type="password" id="oMK" autocomplete="off">
+    <div class="loi" id="loi"></div>
+    <button class="nut" id="nutVao">Đăng nhập</button>
+    <p class="mo" style="margin-bottom:0">Mật khẩu ghi tại sheet QUAN_TRI của bảng Kho số liệu trong Drive của phòng.</p>
+  </section>
+
+  <section id="pQT" hidden>
+    <div class="the">
+      <h2>1. Đồng bộ số liệu từ bcth</h2>
+      <p style="margin-top:0">Kéo nút dưới đây lên <b>thanh dấu trang</b> của Chrome (chỉ làm một lần). Mỗi tháng, sau khi các đơn vị gửi xong báo cáo: đăng nhập <b>bcth.thanhtra.gov.vn</b> → bấm dấu trang → chọn kỳ → <b>Đồng bộ</b>. Công cụ chỉ đọc trên bcth; đồng bộ lại một kỳ sẽ ghi đè số cũ và xóa số nhập dở của kỳ đó.</p>
+      <p><a class="dau-trang" id="dauTrang" href="#">Đồng bộ BC PCTN</a> <span class="mo">← kéo lên thanh dấu trang (không bấm tại đây)</span></p>
+      <details><summary class="mo">Không kéo được? Tạo dấu trang mới và dán đoạn mã này vào ô URL</summary><textarea class="ma" id="maDT" readonly></textarea></details>
+    </div>
+    <div class="the">
+      <h2>2. Số liệu đã đồng bộ</h2>
+      <div id="tomTat" class="mo"></div>
+      <div style="overflow-x:auto;margin-top:8px"><table class="don" id="bangKy"></table></div>
+      <p style="margin-bottom:0"><a id="lkBang" target="_blank" rel="noopener">Mở bảng Kho số liệu (Google Sheets)</a> · <button class="nut phu" id="nutTai" style="padding:3px 10px">Tải lại</button></p>
+    </div>
+    <div class="the">
+      <h2>3. Kỳ đơn vị đang nhập</h2>
+      <p style="margin-top:0">Hiện tại: <b id="kyHT"></b>. Để trống ô dưới = tự động (tháng liền sau kỳ đã đồng bộ gần nhất).</p>
+      <label for="oKy" style="display:inline-block">Đặt kỳ nhập</label>
+      <input type="month" id="oKy" style="width:170px">
+      <label style="display:inline-flex;gap:6px;font-weight:normal;margin-left:14px"><input type="checkbox" id="ckMo"> Cho phép đơn vị nhập</label>
+      <div style="margin-top:10px"><button class="nut" id="nutLuuCH">Lưu cấu hình</button> <span class="mo" id="ttCH"></span></div>
+    </div>
+    <div class="the">
+      <h2>4. Mã truy cập của đơn vị</h2>
+      <p style="margin:0">Sửa trực tiếp cột "Mã truy cập" tại sheet <b>DM_DON_VI</b> của bảng Kho số liệu. Ghi <b>BỎ QUA</b> ở cột Ghi chú để ẩn một đơn vị.</p>
+    </div>
+  </section>
+</main>
+<script src="assets/config.js"></script>
+<script src="assets/common.js"></script>
+<script src="assets/quantri.js"></script>
+</body>
+</html>
