@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hỗ trợ nhập biểu 01/PCTN – Thanh Hóa</title>
-<link rel="stylesheet" href="assets/app.css?v=20261120215422">
+<title>Hỗ trợ nhập biểu báo cáo – Thanh Hóa</title>
+<link rel="stylesheet" href="assets/app.css?v=20261120223037">
 </head>
 <body>
 <header class="dau">
-  <h1>Hỗ trợ nhập biểu 01/PCTN trên Hệ thống báo cáo ngành Thanh tra</h1>
+  <h1>Hỗ trợ nhập biểu số liệu trên Hệ thống báo cáo ngành Thanh tra</h1>
   <span class="dv" id="tenDV"></span>
   <button class="lk" id="nutThoat" hidden>Thoát</button>
   <a href="quan-tri.html" id="lkQT">Quản trị</a>
@@ -17,7 +17,7 @@
   <!-- Đăng nhập -->
   <section id="pDangNhap" class="the hep">
     <h2>Chọn đơn vị</h2>
-    <p class="mo">Trang giúp đơn vị xem số liệu biểu 01/PCTN các tháng đã báo cáo, nhập số liệu tháng hiện tại; số lũy kế, số quý được tính tự động để nhập vào Hệ thống báo cáo tổng hợp ngành Thanh tra (bcth.thanhtra.gov.vn).</p>
+    <p class="mo">Trang giúp đơn vị xem số liệu các tháng đã báo cáo và nhập số liệu tháng hiện tại của biểu 01/PCTN và 6 biểu tiếp công dân, khiếu nại, tố cáo (01/TCD, 02/XLD, 03/GQKN, 04/GQTC, 05/KQTH, 06/QLKNTC); số lũy kế, số quý được tính tự động để nhập vào Hệ thống báo cáo tổng hợp ngành Thanh tra (bcth.thanhtra.gov.vn).</p>
     <label for="oTim">Tìm đơn vị</label>
     <input type="text" id="oTim" placeholder="Gõ tên xã, phường, sở, ngành (không cần dấu)" autocomplete="off">
     <select id="oDV" size="9" aria-label="Danh sách đơn vị"><option disabled>Đang tải danh sách đơn vị…</option></select>
@@ -35,34 +35,43 @@
       <div id="moTaKy"></div>
       <div id="hopCanhBao"></div>
     </div>
+    <div class="tabs" id="tabBieu" role="tablist"></div>
     <div class="thanh">
       <button class="nut" id="nutLuu">Lưu</button>
       <label><input type="checkbox" id="ckLS" checked> Hiện số các tháng trước</label>
       <span id="nutXuat"></span>
       <span class="trang-thai" id="trangThai"></span>
     </div>
+    <div class="the bieu-dau"><b id="tenBieu"></b> <span id="moTaBieu" class="mo"></span><div id="canhBaoBieu"></div></div>
     <div class="khung-bang" id="khungBang"><table class="bieu" id="bang"></table></div>
+    <div class="thanh-phu" id="thanhPhu">
+      <button class="nut phu nho" id="nutDien0">Điền 0 vào ô trống của biểu này</button>
+      <button class="nut phu nho" id="nutXoaBieu">Xóa số tháng này của biểu này</button>
+    </div>
+    <div class="the" id="hopGhiChu" hidden><h2>Ghi chú cách tính của biểu</h2><ul class="kt" id="ghiChuBieu"></ul></div>
     <div class="the" style="margin-top:12px">
-      <h2>Kết quả kiểm tra logic</h2>
+      <h2>Kết quả kiểm tra logic (các biểu đã nhập)</h2>
       <div id="ketQuaKT" class="mo">Chưa có số liệu để kiểm tra.</div>
     </div>
     <div class="the">
       <h2>Cách dùng</h2>
       <ol style="margin:0;padding-left:20px">
-        <li>Nhập số phát sinh <b>trong tháng</b> vào cột màu vàng; bấm <b>Lưu</b> (có thể nhập làm nhiều lần, lần sau đăng nhập sẽ thấy số đã lưu).</li>
-        <li>Cột màu xanh là số lũy kế (và số quý, 6 tháng, 9 tháng, năm ở tháng cuối quý) do trang tự tính từ số đã gửi trên bcth cộng với số tháng này.</li>
-        <li>Trên bcth, lập từng báo cáo biểu 01/PCTN của kỳ và nhập theo đúng cột tương ứng; hoặc bấm <b>Tải tệp</b> rồi dùng nút <b>Import số liệu</b> của bcth để nạp tệp.</li>
+        <li>Chọn biểu ở hàng thẻ phía trên. Nhập số phát sinh <b>trong tháng</b> vào các ô màu vàng; bấm <b>Lưu</b> (có thể nhập làm nhiều lần, lần sau đăng nhập sẽ thấy số đã lưu).</li>
+        <li>Ô màu xanh là số do trang tự tính: cột tổng theo công thức của biểu, số lũy kế (và số quý, 6 tháng, 9 tháng, năm ở tháng cuối quý) tính từ số đã gửi trên bcth cộng với số tháng này.</li>
+        <li>Trên bcth, lập từng báo cáo của kỳ và nhập theo đúng dòng/cột tương ứng; hoặc bấm <b>Tải tệp</b> rồi dùng nút <b>Import số liệu</b> của bcth để nạp tệp.</li>
         <li>Số các tháng trước lấy từ báo cáo đơn vị đã gửi trên bcth. Nếu số đó chưa đúng, đề nghị điều chỉnh trên bcth; trang sẽ cập nhật ở lần đồng bộ sau.</li>
       </ol>
     </div>
   </section>
 </main>
-<script src="assets/config.js?v=20261120215422"></script>
-<script src="../gas/01_ChiTieu.js?v=20261120215422"></script>
-<script src="../gas/02_TinhToan.js?v=20261120215422"></script>
-<script src="../gas/03_QuyTac.js?v=20261120215422"></script>
-<script src="assets/common.js?v=20261120215422"></script>
-<script src="assets/xlsx.js?v=20261120215422"></script>
-<script src="assets/app.js?v=20261120215422"></script>
+<script src="assets/config.js?v=20261120223037"></script>
+<script src="../gas/01_ChiTieu.js?v=20261120223037"></script>
+<script src="../gas/02_TinhToan.js?v=20261120223037"></script>
+<script src="../gas/03_QuyTac.js?v=20261120223037"></script>
+<script src="../gas/04_DanhMucKNTC.js?v=20261120223037"></script>
+<script src="../gas/05_Bieu.js?v=20261120223037"></script>
+<script src="assets/common.js?v=20261120223037"></script>
+<script src="assets/xlsx.js?v=20261120223037"></script>
+<script src="assets/app.js?v=20261120223037"></script>
 </body>
 </html>

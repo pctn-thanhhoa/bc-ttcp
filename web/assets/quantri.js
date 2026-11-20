@@ -9,8 +9,11 @@
     // Nạp bằng fetch (không kèm cookie) rồi chèn mã: thẻ <script src> tới script.google.com bị lỗi khi Chrome đăng nhập nhiều tài khoản Google (đã gặp 20/11/2026)
     $('dauTrang').setAttribute('href', ma); $('maDT').value = ma;
     $('tomTat').textContent = d.soDonVi + ' đơn vị trong danh mục. ' + (d.dongBoLuc ? 'Đồng bộ gần nhất: ' + d.dongBoLuc + '. ' : 'Chưa đồng bộ lần nào. ') + 'Số đơn vị đã lưu số nhập dở của kỳ ' + d.kyNhap + ': ' + d.dangNhap + '.';
-    $('bangKy').innerHTML = '<tr><th>Kỳ</th><th>Báo cáo tháng</th><th>Báo cáo cộng dồn<br><small>(lũy kế / 6 tháng / 9 tháng / năm)</small></th><th>Báo cáo quý</th><th>Trong đó bị trả lại</th></tr>'
-      + (d.ky.length ? d.ky.map(function (k) { return '<tr><td>' + esc(k.ky) + '</td><td>' + k.T + '</td><td>' + k.C + '</td><td>' + k.Q + '</td><td>' + k.traLai + '</td></tr>'; }).join('') : '<tr><td colspan="5">Chưa có số liệu</td></tr>');
+    var ds = d.dsBieu || [{ id: '01PCTN', ten: '01/PCTN' }];
+    $('bangKy').innerHTML = '<tr><th>Kỳ</th>' + ds.map(function (b) { return '<th>' + esc(b.ten) + '</th>'; }).join('') + '</tr>'
+      + (d.ky.length ? d.ky.map(function (k) {
+        return '<tr><td>' + esc(k.ky) + '</td>' + ds.map(function (b) { var o = (k.bieu || {})[b.id]; return '<td>' + (o ? o.T + ' / ' + o.C + ' / ' + o.Q + (o.traLai ? ' <span style="color:#b3261e" title="Số báo cáo đang bị trả lại">(' + o.traLai + ' trả lại)</span>' : '') : '–') + '</td>'; }).join('') + '</tr>';
+      }).join('') : '<tr><td colspan="' + (ds.length + 1) + '">Chưa có số liệu</td></tr>');
     $('lkBang').href = d.bang || '#';
     $('kyHT').textContent = W.tenKy(d.kyNhap) + (d.kyNhapDat ? ' (đặt tay)' : ' (tự động)');
     $('oKy').value = d.kyNhapDat || ''; $('ckMo').checked = !!d.moNhap;

@@ -53,3 +53,30 @@ textarea.ma { width: 100%; height: 86px; font: 12px/1.4 Consolas, monospace; }
 a.dau-trang { display: inline-block; padding: 6px 14px; background: var(--luc); color: #fff; border-radius: 4px; text-decoration: none; font-weight: bold; cursor: grab; }
 @media (max-width: 700px) { main { padding: 10px 8px 60px; } table.bieu { font-size: 12px; } .thanh { position: static; } }
 @media print { .thanh, header.dau a, header.dau button { display: none; } body { background: #fff; } }
+
+/* Thẻ chọn biểu và bảng ngang (6 biểu tiếp công dân, khiếu nại, tố cáo) */
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 8px; }
+.tabs button { font: inherit; padding: 7px 14px; border: 1px solid var(--vien); border-bottom-width: 3px; background: #fff; color: var(--chu); border-radius: 6px 6px 0 0; cursor: pointer; }
+.tabs button.chon { border-color: var(--xanh); background: var(--xanh); color: #fff; font-weight: bold; }
+.tabs button .dem { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 6px; border-radius: 9px; font-size: 11.5px; background: var(--do); color: #fff; }
+.tabs button .co { display: inline-block; width: 7px; height: 7px; margin-left: 6px; border-radius: 50%; background: var(--luc); vertical-align: middle; }
+.tabs button.chon .co { background: #fff; }
+.bieu-dau { padding: 8px 12px; margin-bottom: 8px; }
+.thanh-phu { margin: 8px 0 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+button.nut.nho { padding: 4px 10px; font-size: 13px; }
+table.ngang th, table.ngang td { text-align: center; vertical-align: middle; }
+table.ngang thead th { position: static; font-weight: bold; min-width: 76px; }
+table.ngang thead tr.ms th { font-weight: normal; background: #f3f6fa; font-size: 12px; }
+table.ngang thead tr.ms th small { color: var(--xanh); }
+table.ngang th.ky, table.ngang td.ky { position: sticky; left: 0; z-index: 3; background: #fff; text-align: left; min-width: 150px; max-width: 190px; white-space: normal; box-shadow: inset -1px 0 0 #b8c3cd; }
+table.ngang thead th.ky { background: var(--xanh-nhat); }
+table.ngang td.ky small { display: block; color: var(--mo); font-weight: normal; }
+table.ngang td.so { text-align: right; }
+table.ngang tr.h-nhap td.ky { background: #fffdf2; font-weight: bold; }
+table.ngang tr.h-tinh td.ky { background: #eef7f2; font-weight: bold; }
+table.ngang td.nhap { min-width: 70px; }
+table.ngang td.nhap input { padding: 4px 4px; }
+table.ngang td.nhap input.tay { background: #f3fbf6; border-style: dashed; }
+table.bieu td.o-sai { box-shadow: inset 0 -3px 0 var(--do); }
+table.bieu td.o-xem { box-shadow: inset 0 -3px 0 #d98b00; }
+table.bieu td.goc.ngo { color: var(--cam); font-weight: bold; }

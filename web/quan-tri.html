@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Quản trị – Hỗ trợ nhập biểu 01/PCTN</title>
-<link rel="stylesheet" href="assets/app.css?v=20261120215422">
+<title>Quản trị – Hỗ trợ nhập biểu báo cáo</title>
+<link rel="stylesheet" href="assets/app.css?v=20261120223037">
 </head>
 <body>
 <header class="dau">
-  <h1>Quản trị – Hỗ trợ nhập biểu 01/PCTN</h1>
+  <h1>Quản trị – Hỗ trợ nhập biểu báo cáo</h1>
   <a href="index.html">Trang đơn vị</a>
 </header>
 <main>
@@ -25,13 +25,14 @@
   <section id="pQT" hidden>
     <div class="the">
       <h2>1. Đồng bộ số liệu từ bcth</h2>
-      <p style="margin-top:0">Kéo nút dưới đây lên <b>thanh dấu trang</b> của Chrome (chỉ làm một lần). Mỗi tháng, sau khi các đơn vị gửi xong báo cáo: đăng nhập <b>bcth.thanhtra.gov.vn</b> → bấm dấu trang → chọn kỳ → <b>Đồng bộ</b>. Công cụ chỉ đọc trên bcth; đồng bộ lại một kỳ sẽ ghi đè số cũ và xóa số nhập dở của kỳ đó.</p>
+      <p style="margin-top:0">Kéo nút dưới đây lên <b>thanh dấu trang</b> của Chrome (chỉ làm một lần). Mỗi tháng, sau khi các đơn vị gửi xong báo cáo: đăng nhập <b>bcth.thanhtra.gov.vn</b> → bấm dấu trang → chọn kỳ, chọn biểu → <b>Đồng bộ</b>. Công cụ chỉ đọc trên bcth; đồng bộ lại một kỳ sẽ ghi đè số cũ và xóa số nhập dở của kỳ đó.</p>
       <p><a class="dau-trang" id="dauTrang" href="#">Đồng bộ BC PCTN</a> <span class="mo">← kéo lên thanh dấu trang (không bấm tại đây)</span></p>
       <details><summary class="mo">Không kéo được? Tạo dấu trang mới và dán đoạn mã này vào ô URL</summary><textarea class="ma" id="maDT" readonly></textarea></details>
     </div>
     <div class="the">
       <h2>2. Số liệu đã đồng bộ</h2>
       <div id="tomTat" class="mo"></div>
+      <div class="mo">Mỗi ô: số báo cáo tháng / cộng dồn (lũy kế, 6 tháng, 9 tháng, năm) / quý đã đồng bộ.</div>
       <div style="overflow-x:auto;margin-top:8px"><table class="don" id="bangKy"></table></div>
       <p style="margin-bottom:0"><a id="lkBang" target="_blank" rel="noopener">Mở bảng Kho số liệu (Google Sheets)</a> · <button class="nut phu" id="nutTai" style="padding:3px 10px">Tải lại</button></p>
     </div>
@@ -49,8 +50,8 @@
     </div>
   </section>
 </main>
-<script src="assets/config.js?v=20261120215422"></script>
-<script src="assets/common.js?v=20261120215422"></script>
-<script src="assets/quantri.js?v=20261120215422"></script>
+<script src="assets/config.js?v=20261120223037"></script>
+<script src="assets/common.js?v=20261120223037"></script>
+<script src="assets/quantri.js?v=20261120223037"></script>
 </body>
 </html>
