@@ -201,6 +201,6 @@
     var tk = null; try { tk = sessionStorage.getItem(KHOA_PHIEN); } catch (e) { }
     if (tk) { try { S.token = tk; vao(await W.goi({ action: 'hoSo', token: tk })); return; } catch (e) { try { sessionStorage.removeItem(KHOA_PHIEN); } catch (x) { } } }
     try { DS = (await W.lay('action=danhMuc')).donVi; veDanhSach(); if (!DS.length) $('loiDN').textContent = 'Chưa có danh mục đơn vị (chưa đồng bộ dữ liệu lần đầu).'; }
-    catch (e) { $('loiDN').textContent = e.message; }
+    catch (e) { $('loiDN').textContent = e.message; $('oDV').innerHTML = '<option disabled>Chưa tải được danh sách – bấm F5 để thử lại</option>'; }
   })();
 })();
