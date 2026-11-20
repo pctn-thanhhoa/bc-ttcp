@@ -39,7 +39,7 @@
 
   // ------------------------------------------------------------ bản nháp trên máy
   var khoaNhap = function () { return 'bcttcp_nhap_' + S.hs.donVi.ma + '_' + S.hs.kyNhap; };
-  function luuMay(daLuu) { try { localStorage.setItem(khoaNhap(), JSON.stringify({ so: S.so, daLuu: !!daLuu, nguoi: $('oNguoi').value })); } catch (e) { } }
+  function luuMay(daLuu) { try { localStorage.setItem(khoaNhap(), JSON.stringify({ so: S.so, daLuu: !!daLuu })); } catch (e) { } }
   function docMay() { try { return JSON.parse(localStorage.getItem(khoaNhap()) || 'null'); } catch (e) { return null; } }
 
   // ------------------------------------------------------------ dựng trang nhập
@@ -50,8 +50,8 @@
     $('tenDV').textContent = hs.donVi.ten;
 
     var may = docMay(), tuMay = false;
-    if (may && !may.daLuu && may.so && Object.keys(may.so).length) { S.so = may.so; S.chuaLuu = true; tuMay = true; if (may.nguoi) $('oNguoi').value = may.nguoi; }
-    else if (hs.nhap) { S.so = hs.nhap.so || {}; $('oNguoi').value = hs.nhap.nguoi || ''; }
+    if (may && !may.daLuu && may.so && Object.keys(may.so).length) { S.so = may.so; S.chuaLuu = true; tuMay = true; }
+    else if (hs.nhap) S.so = hs.nhap.so || {};
     Object.keys(S.so).forEach(function (ma) { if (typeof S.so[ma] !== 'number' || !isFinite(S.so[ma])) delete S.so[ma]; });
 
     var tr = m === 1 ? { t: 12, n: nam - 1 } : { t: m - 1, n: nam };
@@ -158,7 +158,7 @@
     S.dangLuu = true; veTrangThai();
     try {
       var gui = JSON.stringify(S.so);
-      var r = await W.goi({ action: 'luu', token: S.token, ky: S.hs.kyNhap, so: S.so, nguoi: $('oNguoi').value.trim() });
+      var r = await W.goi({ action: 'luu', token: S.token, ky: S.hs.kyNhap, so: S.so });
       S.dangLuu = false;
       if (gui === JSON.stringify(S.so)) { S.chuaLuu = false; luuMay(true); }
       veTrangThai('Đã lưu lúc ' + r.luc);
@@ -195,7 +195,6 @@
   $('bang').addEventListener('keydown', phimEnter);
   $('ckLS').addEventListener('change', function () { $('khungBang').classList.toggle('an-ls', !this.checked); });
   $('nutXuat').addEventListener('click', function (e) { var i = e.target.getAttribute('data-xuat'); if (i !== null) xuat(+i); });
-  $('oNguoi').addEventListener('change', function () { if (S.hs) { S.chuaLuu = true; luuMay(false); veTrangThai(); } });
   window.addEventListener('beforeunload', function (e) { if (S.chuaLuu) { e.preventDefault(); e.returnValue = ''; } });
 
   (async function () {
