@@ -5,7 +5,8 @@
   function ve(d) {
     $('pDN').hidden = true; $('pQT').hidden = false;
     var api = /^https?:/.test(BC_API) ? BC_API : location.origin + BC_API;
-    var ma = "javascript:(function(){window.__bcCfg={u:'" + api + "',k:'" + d.khoa + "'};var s=document.createElement('script');s.src=window.__bcCfg.u+'?js=1&k='+window.__bcCfg.k+'&t='+Date.now();s.onerror=function(){alert('Không nạp được công cụ đồng bộ')};document.body.appendChild(s)})();";
+    var ma = "javascript:(function(){window.__bcCfg={u:'" + api + "',k:'" + d.khoa + "'};fetch(window.__bcCfg.u+'?js=1&k='+window.__bcCfg.k+'&t='+Date.now()).then(function(r){return r.text()}).then(function(t){var s=document.createElement('script');s.textContent=t;document.body.appendChild(s)}).catch(function(e){alert('Không nạp được công cụ đồng bộ: '+e.message)})})();";
+    // Nạp bằng fetch (không kèm cookie) rồi chèn mã: thẻ <script src> tới script.google.com bị lỗi khi Chrome đăng nhập nhiều tài khoản Google (đã gặp 20/11/2026)
     $('dauTrang').setAttribute('href', ma); $('maDT').value = ma;
     $('tomTat').textContent = d.soDonVi + ' đơn vị trong danh mục. ' + (d.dongBoLuc ? 'Đồng bộ gần nhất: ' + d.dongBoLuc + '. ' : 'Chưa đồng bộ lần nào. ') + 'Số đơn vị đã lưu số nhập dở của kỳ ' + d.kyNhap + ': ' + d.dangNhap + '.';
     $('bangKy').innerHTML = '<tr><th>Kỳ</th><th>Báo cáo tháng</th><th>Báo cáo cộng dồn<br><small>(lũy kế / 6 tháng / 9 tháng / năm)</small></th><th>Báo cáo quý</th><th>Trong đó bị trả lại</th></tr>'
