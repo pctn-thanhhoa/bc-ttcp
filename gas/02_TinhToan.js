@@ -105,7 +105,7 @@ function bcTinhBieu(bieu, lichSu, ky, nhap) {
     }
     if (thieuT.length) canhBao.push('Thiếu báo cáo tháng ' + thieuT.join(', ') + ' trên bcth nên số gốc chưa gồm các tháng này.');
 
-    // Cảnh báo số gốc có dấu hiệu sai (vẫn dùng số trên bcth – đơn vị tự đối chiếu, điều chỉnh trên bcth nếu cần)
+    // Cảnh báo số gốc chưa thống nhất với số các tháng (số đã gửi trên bcth không thay đổi được – vẫn dùng làm số gốc, chỉ để đơn vị lưu ý)
     if (cd) nhapCT.forEach(function (r) {
       if (bcLoaiCua(bieu, r).k !== 'CONG' || tuTinh[r[0]]) return;
       var ma = r[0], x = so(cd, ma), tong = 0, lon = 0, thLon = 0;

@@ -70,7 +70,7 @@
     Object.keys(S.so).forEach(function (ma) { if (typeof S.so[ma] !== 'number' || !isFinite(S.so[ma])) delete S.so[ma]; });
 
     var tr = m === 1 ? { t: 12, n: nam - 1 } : { t: m - 1, n: nam }, bo = bcBoBaoCao(ky, '…');
-    $('tdKy').textContent = 'Kỳ đang nhập: ' + W.tenKy(ky);
+    $('tdKy').textContent = 'Kỳ báo cáo đang lập: ' + W.tenKy(ky);
     $('moTaKy').innerHTML = 'Số liệu tính từ ngày 15/' + tr.t + '/' + tr.n + ' đến ngày 14/' + m + '/' + nam + '. '
       + 'Trên bcth, kỳ này mỗi biểu lập <b>' + bo.length + ' báo cáo</b>: ' + bo.map(function (b) { return esc(b.ten.charAt(0).toLowerCase() + b.ten.slice(1)); }).join(', ') + '.'
       + (hs.dongBo ? ' <span class="mo">Số các tháng trước đồng bộ từ bcth lúc ' + esc(hs.dongBo) + '.</span>' : '')
@@ -85,8 +85,53 @@
     $('tabBieu').innerHTML = DS.map(function (b) {
       var loi = (S.loiTheoBieu || {})[b.id] || 0;
       return '<button role="tab" data-tab="' + b.id + '" class="' + (b.id === S.tab ? 'chon' : '') + '" title="' + esc(b.tieuDe) + '">' + esc(b.ten)
-        + (loi ? '<span class="dem" title="Số điểm cần điều chỉnh">' + loi + '</span>' : (coSo(b) ? '<span class="co" title="Đã có số tháng này"></span>' : '')) + '</button>';
+        + (loi ? '<span class="dem" title="Số điểm chưa hợp lý ở số kỳ đang lập">' + loi + '</span>' : (coSo(b) ? '<span class="co" title="Đã có số tháng này"></span>' : '')) + '</button>';
     }).join('');
+  }
+
+  // ------------------------------------------------------------ rà soát số liệu ĐÃ GỬI trên bcth của một biểu (các kỳ trong năm đã đồng bộ)
+  // Trả về [{ ky: số tháng, bc: tên báo cáo, muc, nd }]
+  function raSoatDaGui(bieu) {
+    var k = bcTachKy(S.hs.kyNhap), nam = k.nam, L = lichSu(bieu.id), laXa = S.hs.donVi.khoi === 'Xã, phường', kq = [], j;
+    var tuTinh = {}; (bieu.congThuc || []).forEach(function (f) { tuTinh[f.ma] = 1; });
+    var nhan = function (r) { return bieu.kieu === 'DOC' ? (r[1] ? 'CT ' + r[1] : r[2]) : 'Cột (' + bieu.ms[r[0]] + ')'; };
+    var so = function (o, ma) { var v = o ? o[ma] : 0; return typeof v === 'number' && isFinite(v) ? v : 0; };
+    for (j = 1; j < k.thang; j++) {
+      var d = L[bcKy(nam, j)]; if (!d) continue;
+      var cd = bcCongDonCua(L, nam, j), cdTruoc = j > 1 ? bcCongDonCua(L, nam, j - 1) : null;
+      [['T', 'tháng ' + j], ['C', bcTenCongDon(j)], ['Q', 'quý']].forEach(function (x) {
+        if (!d[x[0]] || (x[0] === 'Q' && j === 3 && !d.C)) return; // quý I đã xét ở dòng cộng dồn
+        bcKiemTraBieu(bieu, d[x[0]], laXa).forEach(function (e) { kq.push({ ky: j, bc: x[1], muc: e.muc, nd: e.nd }); });
+      });
+      if (cd) nhapCua(bieu).forEach(function (r) {
+        if (bcLoaiCua(bieu, r).k !== 'CONG' || tuTinh[r[0]]) return;
+        var a = so(cd, r[0]), t = so(d.T, r[0]);
+        if (d.T && t > a) kq.push({ ky: j, bc: bcTenCongDon(j), muc: 'SAI', nd: nhan(r) + ': số tháng ' + j + ' (' + fmt(t) + ') lớn hơn số ' + bcTenCongDon(j) + ' (' + fmt(a) + ')' });
+        if (cdTruoc) {
+          var p = so(cdTruoc, r[0]);
+          if (a < p) kq.push({ ky: j, bc: bcTenCongDon(j), muc: 'SAI', nd: nhan(r) + ': số ' + bcTenCongDon(j) + ' (' + fmt(a) + ') nhỏ hơn số ' + bcTenCongDon(j - 1) + ' (' + fmt(p) + ')' });
+          else if (d.T && Math.abs(a - p - t) > 1e-6) kq.push({ ky: j, bc: bcTenCongDon(j), muc: 'XEM', nd: nhan(r) + ': số ' + bcTenCongDon(j) + ' tăng ' + fmt(a - p) + ' so với ' + bcTenCongDon(j - 1) + ' nhưng số tháng ' + j + ' là ' + fmt(t) });
+        }
+      });
+    }
+    return kq;
+  }
+  function veRaSoat(bieu) {
+    var k = bcTachKy(S.hs.kyNhap), L = lichSu(bieu.id), cac = [], j;
+    for (j = 1; j < k.thang; j++) { var d = L[bcKy(k.nam, j)]; if (d) cac.push(j + (d.T ? '' : ' (thiếu báo cáo tháng)') + (bcCongDonCua(L, k.nam, j) ? '' : ' (thiếu báo cáo cộng dồn)')); }
+    if (!cac.length) { $('raSoatDaGui').innerHTML = 'Chưa có số liệu năm ' + k.nam + ' của biểu này (đơn vị chưa gửi trên bcth hoặc Thanh tra tỉnh chưa cập nhật vào trang).'; return; }
+    var ds = raSoatDaGui(bieu), sai = ds.filter(function (x) { return x.muc === 'SAI'; }).length, theoKy = {};
+    ds.forEach(function (x) { (theoKy[x.ky] = theoKy[x.ky] || []).push(x); });
+    var h = '<div>Đã có số liệu các tháng: ' + esc(cac.join(', ')) + '.</div>';
+    if (!ds.length) h += '<div style="color:#0b6b4f;margin-top:4px">Không phát hiện điểm chưa thống nhất trong số liệu đã gửi của biểu này.</div>';
+    else h += '<div style="margin-top:4px;color:#1c2733">Phát hiện <b>' + sai + '</b> điểm chưa hợp lý và <b>' + (ds.length - sai) + '</b> điểm cần xem lại (có thể đúng) trong số liệu đã gửi:</div>'
+      + Object.keys(theoKy).sort(function (x, y) { return y - x; }).map(function (ky, i) {
+        var l = theoKy[ky], s = l.filter(function (x) { return x.muc === 'SAI'; }).length;
+        return '<details' + (i === 0 ? ' open' : '') + '><summary>Kỳ tháng ' + ky + ': ' + s + ' điểm chưa hợp lý, ' + (l.length - s) + ' điểm cần xem lại</summary><ul class="kt">'
+          + l.map(function (x) { return '<li><span class="nhan ' + x.muc + '">' + (x.muc === 'SAI' ? 'Chưa hợp lý' : 'Xem lại') + '</span><b>' + esc('Báo cáo ' + x.bc) + '</b>: ' + esc(x.nd) + '</li>'; }).join('') + '</ul></details>';
+      }).join('')
+      + '<div style="margin-top:4px">Số đã gửi trên bcth được giữ nguyên; kết quả rà soát để đơn vị đối chiếu với sổ sách và lưu ý khi lập báo cáo các kỳ sau.</div>';
+    $('raSoatDaGui').innerHTML = h;
   }
 
   // ------------------------------------------------------------ dựng bảng của biểu đang chọn
@@ -100,9 +145,10 @@
     var cb = kq0.canhBao.slice(), tt = tinhTrang(bieu.id);
     Object.keys(tt).forEach(function (kk) { Object.keys(tt[kk]).forEach(function (l) { if (tt[kk][l][1] === 'Rejected') cb.push('Báo cáo ' + (l === 'T' ? 'tháng' : l === 'Q' ? 'quý' : 'cộng dồn') + ' kỳ ' + W.tenKy(kk) + ' đang bị trả lại trên bcth nên chưa được dùng để tính.'); }); });
     var soDongGoc = Object.keys(kq0.dong).length;
-    if (soDongGoc) cb.push('Có ' + soDongGoc + ' chỉ tiêu mà số cộng dồn đã gửi trên bcth có dấu hiệu chưa đúng (đánh dấu ⚠). Trang vẫn dùng số trên bcth làm số gốc; đề nghị đơn vị đối chiếu và điều chỉnh trên bcth nếu cần.');
+    if (soDongGoc) cb.push('Có ' + soDongGoc + ' chỉ tiêu mà số cộng dồn đã gửi trên bcth chưa thống nhất với số các tháng (đánh dấu ⚠). Trang vẫn lấy số đã gửi làm số gốc để tính kỳ này; đơn vị lưu ý đối chiếu với sổ sách khi lập báo cáo.');
     $('canhBaoBieu').innerHTML = cb.length ? '<div class="canh-bao"><b>Lưu ý</b><ul>' + cb.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul></div>' : '';
 
+    veRaSoat(bieu);
     $('bang').className = 'bieu' + (bieu.kieu === 'NGANG' ? ' ngang' : '');
     $('bang').innerHTML = bieu.kieu === 'NGANG' ? htmlNgang(bieu, kq0, m) : htmlDoc(bieu, kq0, m);
     $('hopGhiChu').hidden = !(bieu.ghiChu && bieu.ghiChu.length);
@@ -215,8 +261,8 @@
     $('ketQuaKT').className = '';
     $('ketQuaKT').innerHTML = !Object.keys(thang).length ? '<span class="mo">Chưa nhập số liệu tháng này.</span>'
       : !ds.length ? 'Không phát hiện điểm bất hợp lý trong các biểu đã nhập (' + Object.keys(thang).map(function (id) { return bcBieu(id).ten; }).join(', ') + ').'
-        : '<div>' + soSai + ' điểm cần điều chỉnh, ' + (ds.length - soSai) + ' điểm cần xem lại (có thể đúng):</div><ul class="kt">' + ds.map(function (x) { return '<li><span class="nhan ' + x.muc + '">' + (x.muc === 'SAI' ? 'Điều chỉnh' : 'Xem lại') + '</span><b>' + esc(x.bieu + ' – ' + x.bc) + '</b>: ' + esc(x.nd) + '</li>'; }).join('') + '</ul>'
-        + '<div class="mo">Điểm bất hợp lý ở báo cáo lũy kế, quý có thể do số đã gửi các kỳ trước; khi đó cần điều chỉnh trên bcth.</div>';
+        : '<div>' + soSai + ' điểm chưa hợp lý, ' + (ds.length - soSai) + ' điểm cần xem lại (có thể đúng):</div><ul class="kt">' + ds.map(function (x) { return '<li><span class="nhan ' + x.muc + '">' + (x.muc === 'SAI' ? 'Chưa hợp lý' : 'Xem lại') + '</span><b>' + esc(x.bieu + ' – ' + x.bc) + '</b>: ' + esc(x.nd) + '</li>'; }).join('') + '</ul>'
+        + '<div class="mo">Điểm bất hợp lý ở báo cáo lũy kế, quý có thể bắt nguồn từ số đã gửi các kỳ trước (xem mục 1).</div>';
     veThe();
   }
   function veTrangThai(s) {

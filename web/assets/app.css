@@ -80,3 +80,8 @@ table.ngang td.nhap input.tay { background: #f3fbf6; border-style: dashed; }
 table.bieu td.o-sai { box-shadow: inset 0 -3px 0 var(--do); }
 table.bieu td.o-xem { box-shadow: inset 0 -3px 0 #d98b00; }
 table.bieu td.goc.ngo { color: var(--cam); font-weight: bold; }
+
+/* Bố cục rà soát */
+h2.muc { font-size: 15px; margin: 14px 0 8px; color: var(--xanh); }
+#raSoatDaGui details { margin-top: 6px; color: var(--chu); }
+#raSoatDaGui summary { cursor: pointer; font-weight: bold; }
